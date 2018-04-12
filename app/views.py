@@ -8,7 +8,7 @@ This file creates your application.
 from app import app, db, login_manager
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, current_user, login_required
-from forms import LoginForm
+from forms import LoginForm,SignUpForm
 from models import User
 from app.models import *
 
@@ -32,7 +32,27 @@ def home():
 def about():
     """Render the website's about page."""
     return render_template('about.html')
-
+    
+@app.route('/signup', methods=["GET", "POST"])
+def signup():
+    #Initialization
+    form = SignUpForm()
+    if request.method == "POST":
+      
+        if form.validate_on_submit():
+            firstname = form.firstname.data
+            lastname = form.lastname.data
+            username = form.username.data
+            password = form.password.data
+        # Add to database
+        user = User(firstname = firstname,lastname = lastname,username = username,password = password)
+        db.create_all()
+        db.session.add(user)
+        db.session.commit()
+        login_user(user)
+        return redirect(url_for("profile")) 
+    return render_template("signup.html", form=form)
+    
 @app.route("/login", methods=["GET", "POST"])
 def login():
     #Initialization
@@ -44,12 +64,12 @@ def login():
             username = form.username.data
             password = form.password.data
             
-            user = UserProfile.query.filter_by(username=username,password=password).first()
+            user = User.query.filter_by(username=username,password=password).first()
             if user is None:
                 flash("Sorry, there is no such user.","warning")
             else:
                 login_user(user)
-                return redirect(url_for("secure_page")) 
+                return redirect(url_for("profile")) 
     return render_template("login.html", form=form)
     
     
@@ -61,18 +81,18 @@ def logout():
     return redirect(url_for("home"))
     
 
-@app.route('/secure-page')
+@app.route('/profile')
 @login_required
-def secure_page():
+def profile():
     flash("You were logged in!", "success")
-    return render_template('secure_page.html')
+    return render_template('profile.html')
     
     
 # user_loader callback. This callback is used to reload the user object from
 # the user ID stored in the session
 @login_manager.user_loader
 def load_user(id):
-    return UserProfile.query.get(int(id))
+    return User.query.get(int(id))
 
 ###
 # The functions below should be applicable to all Flask apps.

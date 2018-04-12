@@ -1,3 +1,25 @@
-body {
-    padding-top: 50px;
+html,body {
+    padding-top: 60px;
+    background-color: #262931;
+    color: white;
+    margin-bottom: 60px;
 }
+
+/* Login Form*/
+.login-form{
+    width: 30%;
+    margin-top: 2%;
+}
+
+/* Signup Form*/
+.signup-form{
+    width: 30%;
+}
+
+
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block main %}
+<section id = "stock-info">
+    {% include 'flash_messages.html' %}
+    <h1 class = "page-header text-center">{{symbol}} - {{name}} - ${{price}}</h1>
+    
+    <table class = "table">
+        
+         <tbody>
+             <tr>
+                 <th></th>
+                 <th></th>
+                 <th></th>
+                 <th></th>
+             </tr>
+             
+             <tr>
+                 <td>Today's Change ($)</td>    
+                 <td>$ {{change}}</td>
+                 <td>Today's Change (%)</td>
+                 <td>{{change_percent}}%</td>
+             </tr>
+             
+             <tr>
+                 <td>Open:</td>
+                 <td>${{open_price}}</td>
+                 <td>Previous Close</td>
+                 <td>${{close}}</td>
+             </tr>
+             
+             <tr>
+                 <td>Volume</td>
+                 <td>{{volume}}</td>
+                 <td>Market Cap</td>
+                 <td>$ {{market_cap}}</td>
+             </tr>
+             
+             <tr>
+                 <td>52 Week Range</td>
+                 <td>$ {{wlow}} - $ {{whigh}}</td>
+                 <td>PE Ratio</td>
+                 <td>{{pe_ratio}}</td>
+             </tr>
+                 
+         </tbody>
+    </table>
+    
+</section>
+{% endblock %}

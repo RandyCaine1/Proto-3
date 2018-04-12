@@ -2,8 +2,8 @@ from . import db
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(80))
-    last_name = db.Column(db.String(80))
+    firstname = db.Column(db.String(80))
+    lastname = db.Column(db.String(80))
     username = db.Column(db.String(80), unique=True)
     password = db.Column(db.String(255))
 
