@@ -1,2 +1,2 @@
-# Project Starter Code
-Flask with Login Capabilities
+# Capstone Prototype Two 
+Build a profile and customize preferences
