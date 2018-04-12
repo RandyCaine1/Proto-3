@@ -11,6 +11,9 @@ from flask_login import login_user, logout_user, current_user, login_required
 from forms import LoginForm,SignUpForm
 from models import User
 from app.models import *
+import requests
+import json
+import datetime
 
 
 ###
@@ -25,9 +28,10 @@ nasdaq = ['AAL', 'AAPL', 'ADBE', 'ADI', 'ADP', 'ADSK', 'AKAM', 'ALGN', 'ALXN', '
 
 @app.route('/')
 def home():
+    
     """Render website's home page."""
     return render_template('home.html')
-
+    
 @app.route('/about/')
 def about():
     """Render the website's about page."""
@@ -85,7 +89,33 @@ def logout():
 @login_required
 def profile():
     flash("You were logged in!", "success")
-    return render_template('profile.html')
+    symbol = 'AAPL'
+    
+    url = "https://api.iextrading.com/1.0/stock/aapl/batch?types=quote,news,chart&range=1m&last=10"
+    
+    # Retrieve data
+    page = requests.get(url)
+    
+    # Convert to json
+    data = page.json()
+    
+    # Store retrieved data
+    company = data['quote']
+    symbol = company['symbol']
+    name = company['companyName']
+    price = company['latestPrice']
+    open_price = company['open']
+    change = company['change']
+    change_percent = company['changePercent']
+    market_cap = "{:,.2f}".format(company['marketCap'])
+    close = company['close']
+    volume = company['latestVolume']
+    whigh = company['week52High']
+    wlow = company['week52Low']
+    pe_ratio = company['peRatio']
+    return render_template('profile.html',symbol=symbol,name=name,price=price,open_price = open_price,change=change,change_percent=change_percent,market_cap=market_cap,close=close,volume=volume,whigh=whigh,wlow=wlow,pe_ratio=pe_ratio)
+
+    
     
     
 # user_loader callback. This callback is used to reload the user object from
