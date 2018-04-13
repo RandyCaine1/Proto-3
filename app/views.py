@@ -130,7 +130,6 @@ def profile():
     user_id = current_user.id
     settings = Settings.query.filter_by(user_id = user_id).first()
     investor_type = settings.investor_type
-    print(investor_type)
     return render_template('profile.html',form=form,symbol=symbol,name=name,price=price,open_price = open_price,change=change,change_percent=change_percent,market_cap=market_cap,close=close,volume=volume,whigh=whigh,wlow=wlow,pe_ratio=pe_ratio,investor_type=investor_type)
     
 # user_loader callback. This callback is used to reload the user object from
@@ -148,21 +147,20 @@ def settings():
     if request.method == "POST":
         if form.validate_on_submit():
             user_id = current_user.id;
-            investor_type = form.investor_type.data
+            choice = form.investor_type.data
             
-            # Add to database
-            settings = Settings(user_id = user_id,investor_type = investor_type)
+            settings = Settings.query.filter_by(user_id = user_id).first()
             
             # If it doesn't exist, create a new one
-            settings_check = settings.query.filter_by(user_id = user_id).first()
-            
-            if settings_check is None:
+            if settings is None:
+                # Add to database
+                settings = Settings(user_id = user_id,investor_type = choice)
                 db.create_all()
                 db.session.add(settings)
                 db.session.commit()
             else:
             # Otherwise update
-                settings.investor_type = investor_type
+                settings.investor_type = choice
                 db.session.commit()
             
             return redirect(url_for("profile"))
