@@ -8,7 +8,7 @@ This file creates your application.
 from app import app, db, login_manager
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, current_user, login_required
-from forms import LoginForm,SignUpForm
+from forms import LoginForm,SignUpForm,StockForm
 from models import User
 from app.models import *
 import requests
@@ -56,8 +56,9 @@ def signup():
         login_user(user)
         return redirect(url_for("profile")) 
     return render_template("signup.html", form=form)
-    
+
 @app.route("/login", methods=["GET", "POST"])
+@login_required
 def login():
     #Initialization
     form = LoginForm()
@@ -85,13 +86,27 @@ def logout():
     return redirect(url_for("home"))
     
 
-@app.route('/profile')
+@app.route("/profile", methods=["GET", "POST"])
 @login_required
 def profile():
-    flash("You were logged in!", "success")
-    symbol = 'AAPL'
     
-    url = "https://api.iextrading.com/1.0/stock/aapl/batch?types=quote,news,chart&range=1m&last=10"
+    #Initialization
+    form = StockForm()
+    
+    # Default stock selection
+    symbol = 'aapl'
+    
+    if request.method == "POST":
+        if form.validate_on_submit():
+            query = form.stock.data
+            query = query.upper()
+            if query in dow or query in SP500 or query in nasdaq:
+                query = query.lower()
+                symbol = query
+            else:
+                flash("Hmmm, stock symbol now found", "danger")
+            
+    url = "https://api.iextrading.com/1.0/stock/" + symbol + "/batch?types=quote,news,chart&range=1m&last=10"
     
     # Retrieve data
     page = requests.get(url)
@@ -113,7 +128,7 @@ def profile():
     whigh = company['week52High']
     wlow = company['week52Low']
     pe_ratio = company['peRatio']
-    return render_template('profile.html',symbol=symbol,name=name,price=price,open_price = open_price,change=change,change_percent=change_percent,market_cap=market_cap,close=close,volume=volume,whigh=whigh,wlow=wlow,pe_ratio=pe_ratio)
+    return render_template('profile.html',form=form,symbol=symbol,name=name,price=price,open_price = open_price,change=change,change_percent=change_percent,market_cap=market_cap,close=close,volume=volume,whigh=whigh,wlow=wlow,pe_ratio=pe_ratio)
 
     
     

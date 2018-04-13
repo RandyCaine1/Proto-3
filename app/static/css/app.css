@@ -6,14 +6,20 @@ html,body {
 }
 
 /* Login Form*/
-.login-form{
+.login-form {
     width: 30%;
     margin-top: 2%;
 }
 
 /* Signup Form*/
-.signup-form{
+.signup-form {
     width: 30%;
+}
+
+.stock-form{
+    width: 30%;
+    float: right;
+    margin-bottom: 2%;
 }
 
 

@@ -11,3 +11,6 @@ class SignUpForm(FlaskForm):
     lastname = StringField('Lastname', validators=[InputRequired()])
     username = StringField('Username', validators=[InputRequired()])
     password = PasswordField('Password', validators=[InputRequired()])
+    
+class StockForm(FlaskForm):
+    stock = StringField('Stock', validators=[InputRequired()])
