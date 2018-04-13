@@ -39,6 +39,7 @@
                  <td>${{close}}</td>
              </tr>
              
+             {% if investor_type == "Growth" %}
              <tr>
                  <td>Volume</td>
                  <td>{{volume}}</td>
@@ -46,13 +47,14 @@
                  <td>$ {{market_cap}}</td>
              </tr>
              
+             {% elif investor_type == "Value" %}
              <tr>
                  <td>52 Week Range</td>
                  <td>$ {{wlow}} - $ {{whigh}}</td>
                  <td>PE Ratio</td>
                  <td>{{pe_ratio}}</td>
              </tr>
-                 
+            {% endif %}
          </tbody>
     </table>
     

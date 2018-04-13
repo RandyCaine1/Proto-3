@@ -2,7 +2,6 @@
 
 {% block main %}
 
-  <h2>Settings</h2>
   <div class="signup-form center-block">
     
     </br>
@@ -10,7 +9,7 @@
       {{ form.csrf_token }}
        <div class="form-group">
         {{ form.investor_type.label }}
-        {{ form.investor_type(class='form-control', placeholder="Fundamental or Technical") }}
+        {{ form.investor_type(class='form-control', placeholder="Growth or Value") }}
       </div>
     
       <button type="submit" name="submit" class="btn btn-primary btn-block">Update</button>
