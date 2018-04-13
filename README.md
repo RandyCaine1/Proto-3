@@ -1,2 +1,2 @@
-# Capstone Prototype Two 
-Build a profile and customize preferences
+# Capstone Prototype Three 
+Generate technical and fundamental stock analysis
