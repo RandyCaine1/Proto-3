@@ -6,11 +6,10 @@
     <h1 class = "page-header text-center">{{symbol}} - {{name}} - ${{price}}</h1>
     {% include 'flash_messages.html' %}
     <form class = "stock-form" action="{{ url_for('profile')}}" method="post">
-        <div class = "input-group join-form">
+        <div class = "join-form">
              {{ form.csrf_token }}
             <div class="input-group-btn">
-                <button type="button" class = "btn btn-primary">Search</button>
-                {{ form.stock(class='form-control', placeholder="Search") }}
+                {{ form.stock(class='form-control', placeholder="Search Stocks e.g. AAPL") }}
              </div>
         </div>
     </form>

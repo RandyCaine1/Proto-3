@@ -14,3 +14,7 @@ class SignUpForm(FlaskForm):
     
 class StockForm(FlaskForm):
     stock = StringField('Stock', validators=[InputRequired()])
+    
+class SettingsForm(FlaskForm):
+    investor_type = StringField('Investing Style', validators=[InputRequired()])
+    

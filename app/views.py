@@ -8,7 +8,7 @@ This file creates your application.
 from app import app, db, login_manager
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, current_user, login_required
-from forms import LoginForm,SignUpForm,StockForm
+from forms import LoginForm,SignUpForm,StockForm,SettingsForm
 from models import User
 from app.models import *
 import requests
@@ -31,11 +31,6 @@ def home():
     
     """Render website's home page."""
     return render_template('home.html')
-    
-@app.route('/about/')
-def about():
-    """Render the website's about page."""
-    return render_template('about.html')
     
 @app.route('/signup', methods=["GET", "POST"])
 def signup():
@@ -129,15 +124,37 @@ def profile():
     wlow = company['week52Low']
     pe_ratio = company['peRatio']
     return render_template('profile.html',form=form,symbol=symbol,name=name,price=price,open_price = open_price,change=change,change_percent=change_percent,market_cap=market_cap,close=close,volume=volume,whigh=whigh,wlow=wlow,pe_ratio=pe_ratio)
-
-    
-    
     
 # user_loader callback. This callback is used to reload the user object from
 # the user ID stored in the session
 @login_manager.user_loader
 def load_user(id):
     return User.query.get(int(id))
+    
+@app.route('/settings', methods=["GET", "POST"])
+def settings():
+    """Render the website's settings page."""
+    # Initialize form
+    form = SettingsForm()
+    
+    if request.method == "POST":
+        if form.validate_on_submit():
+            user_id = current_user.id;
+            investor_type = form.investor_type.data
+            
+            # Add to database
+            settings = Settings(user_id = user_id,investor_type = investor_type)
+            db.create_all()
+            db.session.add(settings)
+            db.session.commit()
+            
+            
+            return redirect(url_for("profile"))
+            
+    
+    return render_template('settings.html',form=form)
+
+
 
 ###
 # The functions below should be applicable to all Flask apps.
