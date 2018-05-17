@@ -28,61 +28,59 @@ nasdaq = ['AAL', 'AAPL', 'ADBE', 'ADI', 'ADP', 'ADSK', 'AKAM', 'ALGN', 'ALXN', '
 
 @app.route('/')
 def home():
-    
-    """Render website's home page."""
     return render_template('home.html')
     
-@app.route('/signup', methods=["GET", "POST"])
-def signup():
-    #Initialization
-    form = SignUpForm()
-    if request.method == "POST":
+# @app.route('/signup', methods=["GET", "POST"])
+# def signup():
+#     #Initialization
+#     form = SignUpForm()
+#     if request.method == "POST":
       
-        if form.validate_on_submit():
-            firstname = form.firstname.data
-            lastname = form.lastname.data
-            username = form.username.data
-            password = form.password.data
-        # Add to database
-        user = User(firstname = firstname,lastname = lastname,username = username,password = password)
-        db.create_all()
-        db.session.add(user)
-        db.session.commit()
-        login_user(user)
-        return redirect(url_for("profile")) 
-    return render_template("signup.html", form=form)
+#         if form.validate_on_submit():
+#             firstname = form.firstname.data
+#             lastname = form.lastname.data
+#             username = form.username.data
+#             password = form.password.data
+#         # Add to database
+#         user = User(firstname = firstname,lastname = lastname,username = username,password = password)
+#         db.create_all()
+#         db.session.add(user)
+#         db.session.commit()
+#         login_user(user)
+#         return redirect(url_for("profile")) 
+#     return render_template("signup.html", form=form)
 
-@app.route("/login", methods=["GET", "POST"])
-@login_required
-def login():
-    #Initialization
-    form = LoginForm()
-    if request.method == "POST":
+# @app.route("/login", methods=["GET", "POST"])
+# @login_required
+# def login():
+#     #Initialization
+#     form = LoginForm()
+#     if request.method == "POST":
       
-        if form.validate_on_submit():
+#         if form.validate_on_submit():
             
-            username = form.username.data
-            password = form.password.data
+#             username = form.username.data
+#             password = form.password.data
             
-            user = User.query.filter_by(username=username,password=password).first()
-            if user is None:
-                flash("Sorry, there is no such user.","warning")
-            else:
-                login_user(user)
-                return redirect(url_for("profile")) 
-    return render_template("login.html", form=form)
+#             user = User.query.filter_by(username=username,password=password).first()
+#             if user is None:
+#                 flash("Sorry, there is no such user.","warning")
+#             else:
+#                 login_user(user)
+#                 return redirect(url_for("profile")) 
+#     return render_template("login.html", form=form)
     
     
-@app.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    flash("You were logged out.", "success")
-    return redirect(url_for("home"))
+# @app.route('/logout')
+# @login_required
+# def logout():
+#     logout_user()
+#     flash("You were logged out.", "success")
+#     return redirect(url_for("home"))
     
 
 @app.route("/profile", methods=["GET", "POST"])
-@login_required
+# @login_required
 def profile():
     
     #Initialization
@@ -127,46 +125,53 @@ def profile():
     pe_ratio = company['peRatio']
     
     # Retrieve settings
-    user_id = current_user.id
-    settings = Settings.query.filter_by(user_id = user_id).first()
-    investor_type = settings.investor_type
+    # user_id = current_user.id
+    # settings = Settings.query.filter_by(user_id = user_id).first()
+    # investor_type = settings.investor_type
+    investor_type = 'Value'
     return render_template('profile.html',form=form,symbol=symbol,name=name,price=price,open_price = open_price,change=change,change_percent=change_percent,market_cap=market_cap,close=close,volume=volume,whigh=whigh,wlow=wlow,pe_ratio=pe_ratio,investor_type=investor_type)
+
+
+@app.route("/full", methods=["GET", "POST"])
+def full():
+    return render_template('full.html')
     
-# user_loader callback. This callback is used to reload the user object from
-# the user ID stored in the session
-@login_manager.user_loader
-def load_user(id):
-    return User.query.get(int(id))
+
+# # user_loader callback. This callback is used to reload the user object from
+# # the user ID stored in the session
+# @login_manager.user_loader
+# def load_user(id):
+#     return User.query.get(int(id))
     
-@app.route('/settings', methods=["GET", "POST"])
-def settings():
-    """Render the website's settings page."""
-    # Initialize form
-    form = SettingsForm()
+# @app.route('/settings', methods=["GET", "POST"])
+# def settings():
+#     """Render the website's settings page."""
+#     # Initialize form
+#     form = SettingsForm()
     
-    if request.method == "POST":
-        if form.validate_on_submit():
-            user_id = current_user.id;
-            choice = form.investor_type.data
+#     if request.method == "POST":
+#         if form.validate_on_submit():
+#             user_id = current_user.id;
+#             choice = form.investor_type.data
             
-            settings = Settings.query.filter_by(user_id = user_id).first()
+#             settings = Settings.query.filter_by(user_id = user_id).first()
             
-            # If it doesn't exist, create a new one
-            if settings is None:
-                # Add to database
-                settings = Settings(user_id = user_id,investor_type = choice)
-                db.create_all()
-                db.session.add(settings)
-                db.session.commit()
-            else:
-            # Otherwise update
-                settings.investor_type = choice
-                db.session.commit()
+#             # If it doesn't exist, create a new one
+#             if settings is None:
+#                 # Add to database
+#                 settings = Settings(user_id = user_id,investor_type = choice)
+#                 db.create_all()
+#                 db.session.add(settings)
+#                 db.session.commit()
+#             else:
+#             # Otherwise update
+#                 settings.investor_type = choice
+#                 db.session.commit()
             
-            return redirect(url_for("profile"))
+#             return redirect(url_for("profile"))
             
     
-    return render_template('settings.html',form=form)
+#     return render_template('settings.html',form=form)
 
 
 

@@ -22,6 +22,12 @@ html,body {
     margin-bottom: 2%;
 }
 
+.chart {
+    height: 800px;
+    width: 90%;
+    margin-top: 10%;
+}
+
 
 footer {
   position: absolute;
